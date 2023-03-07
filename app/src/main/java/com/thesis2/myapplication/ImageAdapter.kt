@@ -1,7 +1,9 @@
 package com.thesis2.myapplication
 
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,9 +41,20 @@ class ImageAdapter(private var context: Context, private var imageList: ArrayLis
             .into(holder.image!!)
 
         holder.image?.setOnClickListener{
+
             val intent = Intent(context, ImageFullActivity::class.java)
+
+            var id = currentImage.idColumn
+            var col = currentImage.widthColumn
+            var height =currentImage.heightColumn
+            var curi = currentImage.contentUri
+
             intent.putExtra("path", currentImage.imagePath)
             intent.putExtra("name", currentImage.imageName)
+            intent.putExtra("id", currentImage.idColumn)
+            intent.putExtra("width", currentImage.widthColumn)
+            intent.putExtra("height", currentImage.heightColumn)
+            intent.putExtra("contentUri", currentImage.contentUri.toString())
             context.startActivity(intent)
         }
 

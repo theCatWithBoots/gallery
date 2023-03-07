@@ -1,19 +1,20 @@
 package com.thesis2.myapplication
 
+import android.content.ContentUris
 import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.GridLayout
+import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         imageRecycler = findViewById(R.id.image_recycler)
         progressBar = findViewById(R.id.recycler_progress)
+
 
         imageRecycler?.layoutManager = GridLayoutManager(this, 3)
         imageRecycler?.setHasFixedSize(true)
@@ -47,6 +49,10 @@ class MainActivity : AppCompatActivity() {
             progressBar?.visibility = View.VISIBLE
             //get all images from storage
             allPictures = getAllImages()
+
+           // val currentImage= allPictures?.get(1)
+
+
             //set adapter to recycler
             imageRecycler?.adapter = ImageAdapter(this,allPictures!!)
             progressBar?.visibility = View.GONE
@@ -55,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAllImages(): ArrayList<Image>? {
+
         val images = ArrayList<Image>()
         val allImageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
@@ -62,7 +69,8 @@ class MainActivity : AppCompatActivity() {
 
 
         val projection =
-            arrayOf(MediaStore.Images.ImageColumns.DATA, MediaStore.Images.Media.DISPLAY_NAME)
+            arrayOf(MediaStore.Images.ImageColumns.DATA, MediaStore.Images.Media.DISPLAY_NAME,MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.WIDTH,MediaStore.Images.Media.HEIGHT)
         var cursor =
             this@MainActivity.contentResolver.query(allImageUri, projection, null, null, null)
 
@@ -72,6 +80,14 @@ class MainActivity : AppCompatActivity() {
                 val image = Image()
                 image.imagePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
                 image.imageName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
+                image.idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID).toLong()
+                image.widthColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.WIDTH)
+                image.heightColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.HEIGHT)
+                image.contentUri = ContentUris.withAppendedId(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    image.idColumn!!
+                )
+
                 images.add(image)
             } while (cursor.moveToNext())
             cursor.close()
