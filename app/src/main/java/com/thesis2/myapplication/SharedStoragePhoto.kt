@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 
 data class SharedStoragePhoto(
+    val path: String,
     val id: Long,
     val name: String,
     val width: Int,

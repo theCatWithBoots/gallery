@@ -1,20 +1,16 @@
 package com.thesis2.myapplication
 
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
-import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-class ImageAdapter(private var context: Context, private var imageList: ArrayList<Image>):
+class ImageAdapter(private var context: Context, private var imageList: List<SharedStoragePhoto>):
     RecyclerView.Adapter<ImageAdapter.ImageViewHolder>(){
 
 
@@ -36,7 +32,7 @@ class ImageAdapter(private var context: Context, private var imageList: ArrayLis
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val currentImage=imageList[position]
         Glide.with(context)
-            .load(currentImage.imagePath)
+            .load(currentImage.path)
             .apply(RequestOptions().centerCrop())
             .into(holder.image!!)
 
@@ -44,16 +40,11 @@ class ImageAdapter(private var context: Context, private var imageList: ArrayLis
 
             val intent = Intent(context, ImageFullActivity::class.java)
 
-            var id = currentImage.idColumn
-            var col = currentImage.widthColumn
-            var height =currentImage.heightColumn
-            var curi = currentImage.contentUri
-
-            intent.putExtra("path", currentImage.imagePath)
-            intent.putExtra("name", currentImage.imageName)
-            intent.putExtra("id", currentImage.idColumn)
-            intent.putExtra("width", currentImage.widthColumn)
-            intent.putExtra("height", currentImage.heightColumn)
+            intent.putExtra("path", currentImage.path)
+            intent.putExtra("name", currentImage.name)
+            intent.putExtra("id", currentImage.id)
+            intent.putExtra("width", currentImage.width)
+            intent.putExtra("height", currentImage.height)
             intent.putExtra("contentUri", currentImage.contentUri.toString())
             context.startActivity(intent)
         }

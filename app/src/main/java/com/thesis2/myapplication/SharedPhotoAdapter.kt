@@ -1,5 +1,7 @@
 package com.thesis2.myapplication
 
+import android.R
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
@@ -47,10 +49,12 @@ class SharedPhotoAdapter(
                 applyTo(root)
             }
 
-            ivPhoto.setOnLongClickListener {
+            deleteImage.setOnLongClickListener {
                 onPhotoClick(photo)
                 true
             }
         }
     }
+
+
 }

@@ -38,24 +38,10 @@ class ImageFullActivity : AppCompatActivity() {
 
         val imagePath = intent.getStringExtra("path")
         val imageName = intent.getStringExtra("name")
-        val imageId = intent.getLongExtra("id", 0)
-        val imageWidth = intent.getIntExtra("width", 0)
-        val imageHeight = intent.getIntExtra("height", 0)
-        val contentUri = Uri.parse(intent.getStringExtra("contentUri"))
 
-
-     /*   supportActionBar?.setTitle(imageName)
         Glide.with(this)
             .load(imagePath)
-            .into(findViewById(R.id.imageView))*/
-
-     //   var deleteButton = findViewById<FloatingActionButton>(R.id.delete_image)
-      //  val txt = imagePath.toString()
-        //val replaced = txt.replace("file", "content")
-
-      //  val txt = "content://" + imagePath.toString()
-      //  val replaced = txt.replace("file", "content")
-       // var deletedImageUri = Uri.parse(txt)
+            .into(findViewById(R.id.imageView))
        var deletedImageUri: Uri? = null
 
         intentSenderLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
@@ -65,19 +51,23 @@ class ImageFullActivity : AppCompatActivity() {
                         deletePhotoFromExternalStorage(deletedImageUri ?: return@launch)
                     }
                 }
-                Toast.makeText(this@ImageFullActivity, "Photo deleted successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ImageFullActivity, "Photo deleted successfully Bocchi", Toast.LENGTH_SHORT).show()
+                this.finish()
             } else {
                 Toast.makeText(this@ImageFullActivity, "Photo couldn't be deleted", Toast.LENGTH_SHORT).show()
             }
+
         }
 
 
-         externalStoragePhotoAdapter = SharedPhotoAdapter {
+        externalStoragePhotoAdapter = SharedPhotoAdapter {
             lifecycleScope.launch {
                 deletePhotoFromExternalStorage(it.contentUri)
-                Toast.makeText(this@ImageFullActivity, "I am here", Toast.LENGTH_SHORT).show()
-                //deletedImageUri = it.contentUri
+                Toast.makeText(this@ImageFullActivity, "EREEEENNNN", Toast.LENGTH_SHORT).show()
+                deletedImageUri = it.contentUri
+
             }
+
         }
 
         setupExternalStorageRecyclerView()
@@ -88,16 +78,15 @@ class ImageFullActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val photos = mutableListOf<SharedStoragePhoto>()
 
-            val imagePath = intent.getStringExtra("path")
+            val imagePath = intent.getStringExtra("path").toString()
             val imageName = intent.getStringExtra("name").toString()
             val imageId = intent.getLongExtra("id", 0)
             val imageWidth = intent.getIntExtra("width", 0)
             val imageHeight = intent.getIntExtra("height", 0)
             val contentUri = Uri.parse(intent.getStringExtra("contentUri"))
 
-            photos.add(SharedStoragePhoto(imageId, imageName, imageWidth, imageHeight,  contentUri))
+            photos.add(SharedStoragePhoto(imagePath, imageId, imageName, imageWidth, imageHeight,  contentUri))
             photos.toList()
-
             externalStoragePhotoAdapter.submitList(photos)
         }
     }
